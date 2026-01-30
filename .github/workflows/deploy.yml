@@ -27,7 +27,18 @@ jobs:
           push: true
           tags: tobi1008/profile:latest
 
-      # 4. Deploy to VPS
+      # 4. Copy docker-compose file to VPS
+      - name: Copy docker-compose to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_KEY }}
+          port: 2210
+          source: "docker-compose.prod.yml"
+          target: "profile-app"
+
+      # 5. Deploy to VPS
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
@@ -36,12 +47,11 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           port: 2210
           script: |
-            # Tạo thư mục nếu chưa có
-            mkdir -p ~/profile-app
+            # Vào thư mục app (scp đã tự tạo thư mục profile-app ở bước trên nếu chưa có)
             cd ~/profile-app
             
-            # (Optional) Tự động update file docker-compose.yml nếu muốn
-            # echo "..." > docker-compose.yml 
+            # Đổi tên file vừa copy thành docker-compose.yml chuẩn
+            mv docker-compose.prod.yml docker-compose.yml
             
             # Pull image mới nhất
             docker compose pull
