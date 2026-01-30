@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  profile-app:
+    # Thay `${DOCKERHUB_USERNAME}` bằng user thật của bạn hoặc set biến môi trường
+    # GitHub Action sẽ push image với tag này
+    image: tobi1008/profile
+    container_name: profile-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    # Uncomment nếu muốn persist dữ liệu nào đó
+    # volumes:
+    #   - ./public:/app/public
