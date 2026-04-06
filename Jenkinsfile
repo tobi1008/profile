@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    // Bơm thêm 1GB RAM cho Sonar Scanner để quá trình giải nén Node.js không bị crash
-    environment {
-        SONAR_SCANNER_OPTS = "-Xmx1024m" 
-    }
-
     stages {
         stage('Checkout Code') {
             steps {
@@ -22,8 +17,10 @@ pipeline {
                     
                     // Gọi Server SonarQube đã cấu hình trong Jenkins
                     withSonarQubeEnv('sonarqube-server') {
-                        // Chạy lệnh quét code
+                        // Bơm trực tiếp 2GB RAM vào môi trường shell ngay trước khi chạy lệnh quét
                         sh """
+                        export SONAR_SCANNER_OPTS="-Xmx2048m"
+                        
                         ${scannerHome}/bin/sonar-scanner \
                           -Dsonar.projectKey=demo-lab \
                           -Dsonar.projectName="Demo Lab Nodejs" \
