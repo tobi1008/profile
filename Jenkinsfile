@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Thay URL này bằng link Git chứa source code Node.js lab của bạn
-                git branch: 'main', url: 'https://github.com/ten-cua-ban/nodejs-lab-repo.git'
+                git branch: 'main', url: 'https://github.com/tobi1008/profile.git'
             }
         }
 
