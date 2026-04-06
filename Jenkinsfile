@@ -1,10 +1,15 @@
 pipeline {
     agent any
 
+    // Bơm thêm 1GB RAM cho Sonar Scanner để quá trình giải nén Node.js không bị crash
+    environment {
+        SONAR_SCANNER_OPTS = "-Xmx1024m" 
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
-                // Thay URL này bằng link Git chứa source code Node.js lab của bạn
+                // Kéo source code từ repo Git của bạn
                 git branch: 'main', url: 'https://github.com/tobi1008/profile.git'
             }
         }
@@ -12,10 +17,10 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    // Gọi đúng cái tên Tool bạn vừa cấu hình trong Manage Jenkins -> Tools
+                    // Gọi Tool Scanner đã cấu hình trong Jenkins
                     def scannerHome = tool 'sonar-scanner'
                     
-                    // Gọi đúng cái tên Server bạn vừa cấu hình trong Manage Jenkins -> System
+                    // Gọi Server SonarQube đã cấu hình trong Jenkins
                     withSonarQubeEnv('sonarqube-server') {
                         // Chạy lệnh quét code
                         sh """
